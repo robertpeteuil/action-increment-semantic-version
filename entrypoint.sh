@@ -72,7 +72,7 @@ main() {
           else ((++preversion))
         fi
     fi
-    pre="-beta$presep$preversion";
+    pre="-beta$presep$preversion";;
     # pre="-beta$preversion";;
   "rc")
     if [[ -z "$preversion" ]];
