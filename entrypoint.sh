@@ -93,7 +93,7 @@ main() {
   # new format
   #   https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
   #   echo "{name}={value}" >> $GITHUB_OUTPUT
-  echo "next-version=next_version" >> $GITHUB_OUTPUT
+  echo "next-version=$next_version" >> $GITHUB_OUTPUT
 }
 
 main "$1" "$2"
