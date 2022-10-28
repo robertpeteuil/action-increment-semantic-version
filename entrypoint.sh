@@ -42,11 +42,11 @@ main() {
   # increment version number based on given release type
   case "$release_type" in
     "major")
-      ((++major)); minor=0; patch=0; pre="";;
+      ((++major)); minor=0; patch=0; preout="";;
     "minor" | "feature")
-      ((++minor)); patch=0; pre="";;
+      ((++minor)); patch=0; preout="";;
     "patch" | "bug")
-      ((++patch)); pre="";;
+      ((++patch)); preout="";;
     "alpha")
       if [[ -z "$preversion" ]]; then
         preversion=0
@@ -57,7 +57,7 @@ main() {
           ((++preversion))
         fi
       fi
-      pre="-alpha$presep$preversion";;
+      preout="-alpha$presep$preversion";;
     "beta")
       if [[ -z "$preversion" ]]; then
         preversion=0
@@ -68,7 +68,7 @@ main() {
           ((++preversion))
         fi
       fi
-      pre="-beta$presep$preversion";;
+      preout="-beta$presep$preversion";;
     "rc")
       if [[ -z "$preversion" ]]; then
         preversion=0
@@ -79,10 +79,10 @@ main() {
           ((++preversion))
         fi
       fi
-      pre="-rc$presep$preversion";;
+      preout="-rc$presep$preversion";;
   esac
 
-  next_version="${major}.${minor}.${patch}${pre}"
+  next_version="${major}.${minor}.${patch}${preout}"
   echo "create $release_type-release version: $prev_version -> $next_version"
 
   echo "next-version=$next_version" >> $GITHUB_OUTPUT
