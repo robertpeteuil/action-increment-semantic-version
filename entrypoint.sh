@@ -23,7 +23,7 @@ main() {
     echo "valid argument: [ ${possible_release_types[*]} ]"; exit 1
   fi
 
-  major=0; minor=0; patch=0; pre=""; preversion=0
+  major=0; minor=0; patch=0; pre=""; preversion=""; incerror=""
 
   # break down the version number into it's components
   regex="^([0-9]+).([0-9]+).([0-9]+)((-[a-z]+)(\.)?([0-9]+)?)?$"
@@ -34,6 +34,7 @@ main() {
     pre="${BASH_REMATCH[5]}"
     presep="${BASH_REMATCH[6]}"
     preversion="${BASH_REMATCH[7]}"
+    preout="$pre$presep$preversion"
   else
     echo "previous version '$prev_version' is not a semantic version"
     exit 1
@@ -48,42 +49,103 @@ main() {
     "patch" | "bug")
       ((++patch)); preout="";;
     "alpha")
-      if [[ -z "$preversion" ]]; then
-        preversion=0
-      else
+      # is it allowed?
+      if [[ "$pre" == "" || "$pre" == "-alpha" ]]; then
+        # is it being promoted?
         if [[ "$pre" != "-alpha" ]]; then
           preversion=1
+          presep="."   # SPEC
+        # is it incrementing a pre without a count
+        elif [[ -z "$preversion" ]]; then
+          preversion=2
+          presep="."
+        # else its just incremented
         else
           ((++preversion))
         fi
+        preout="-alpha$presep$preversion"
+      else
+        incerror="cannot increment $pre to -alpha"
       fi
-      preout="-alpha$presep$preversion";;
+      ;;
     "beta")
-      if [[ -z "$preversion" ]]; then
-        preversion=0
-      else
-        if [[ "$pre" != "-beta" ]]; then
+      # is it allowed?
+      if [[ "$pre" == "" || "$pre" == "-alpha" || "$pre" == "-beta" ]]; then
+        # is it being promoted from no pre?
+        if [[ "$pre" == "" ]]; then
           preversion=1
+          presep="."  # SPEC
+        # promotion from alpha
+        elif [[ "$pre" != "-beta" ]]; then
+          # SPEC: if pre-release lacks a count, add standard separator
+          if [[ "$preversion" == "" ]]; then
+            presep="."
+          fi
+          preversion=1
+        # is it incrementing a pre without a count
+        elif [[ -z "$preversion" ]]; then
+          preversion=2
+          presep="."
+        # just incremented
         else
           ((++preversion))
         fi
+        preout="-beta$presep$preversion"
+      else
+        incerror="cannot increment $pre to -beta"
       fi
-      preout="-beta$presep$preversion";;
+      # if [[ -z "$preversion" ]]; then
+      #   preversion=0
+      # else
+      #   if [[ "$pre" != "-beta" ]]; then
+      #     preversion=1
+      #   else
+      #     ((++preversion))
+      #   fi
+      # fi
+      # preout="-beta$presep$preversion"
+      ;;
     "rc")
-      if [[ -z "$preversion" ]]; then
-        preversion=0
-      else
-        if [[ "$pre" != "-rc" ]]; then
-          preversion=1
-        else
-          ((++preversion))
+      # is it being promoted from no pre?
+      if [[ "$pre" == "" ]]; then
+        preversion=1
+        presep="."    # SPEC
+      # promotion from alpha, beta
+      elif [[ "$pre" != "-rc" ]]; then
+        # SPEC: if pre-release lacks a count, add standard separator
+        if [[ "$preversion" == "" ]]; then
+          presep="."
         fi
+        preversion=1
+      # is it incrementing a pre without a count
+      elif [[ -z "$preversion" ]]; then
+        preversion=2
+        presep="."
+      # just incremented
+      else
+        ((++preversion))
       fi
-      preout="-rc$presep$preversion";;
+      preout="-rc$presep$preversion"
+
+      # if [[ -z "$preversion" ]]; then
+      #   preversion=0
+      # else
+      #   if [[ "$pre" != "-rc" ]]; then
+      #     preversion=1
+      #   else
+      #     ((++preversion))
+      #   fi
+      # fi
+      # preout="-rc$presep$preversion"
+      ;;
   esac
 
   next_version="${major}.${minor}.${patch}${preout}"
-  echo "create $release_type-release version: $prev_version -> $next_version"
+  if [[ -n "$incerror" ]]; then
+    echo "error: $incerror, initial version returned as output"
+  else
+    echo "create $release_type-release version: $prev_version -> $next_version"
+  fi
 
   echo "next-version=$next_version" >> $GITHUB_OUTPUT
 }
