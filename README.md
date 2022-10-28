@@ -12,7 +12,7 @@ This is a GitHub action to bump a given semantic version, depending on a given v
 
 **Required** The versions fragment you want to increment.
 
-Possible options are **[ major | minor | patch | alpha | beta | rc ]**
+Possible options are **[ major | (feature | minor) | (bug | patch) | alpha | beta | rc ]**
 
 ## Outputs
 
@@ -22,15 +22,17 @@ The incremented version.
 
 ## Example usage
 
+``` yml
     - name: Bump release version
       id: bump_version
       uses: robertpeteuil/increment-version-action@master
       with:
-        current-version: '2.11.7-alpha3'
+        current-version: '2.11.7'
         version-fragment: 'minor'
     - name: Do something with your bumped release version
       run: echo ${{ steps.bump_version.outputs.next-version }}
       # will print 2.12.0
+```
 
 ## input / output Examples
 
@@ -38,10 +40,10 @@ The incremented version.
 | ---------------- | --------------- | - | ------------- |
 | major            | 2.11.7          |   | 3.0.0         |
 | major            | 2.11.7-alpha3   |   | 3.0.0         |
-| feature          | 2.11.7          |   | 2.12.0        |
-| feature          | 2.11.7-alpha3   |   | 2.12.0        |
-| bug              | 2.11.7          |   | 2.11.8        |
-| bug              | 2.11.7-alpha3   |   | 2.11.8        |
+| feature (minor)  | 2.11.7          |   | 2.12.0        |
+| feature (minor)  | 2.11.7-alpha3   |   | 2.12.0        |
+| bug (patch)      | 2.11.7          |   | 2.11.8        |
+| bug (patch)      | 2.11.7-alpha3   |   | 2.11.8        |
 | alpha            | 2.11.7          |   | 2.11.7-alpha1 |
 | alpha            | 2.11.7-alpha3   |   | 2.11.7-alpha4 |
 | beta             | 2.11.7          |   | 2.11.7-beta1  |
