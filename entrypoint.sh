@@ -41,48 +41,45 @@ main() {
 
   # increment version number based on given release type
   case "$release_type" in
-  "major")
-    ((++major)); minor=0; patch=0; pre="";;
-  "minor" | "feature")
-    ((++minor)); patch=0; pre="";;
-  "patch" | "bug")
-    ((++patch)); pre="";;
-  "alpha")
-    if [[ -z "$preversion" ]];
-      then
+    "major")
+      ((++major)); minor=0; patch=0; pre="";;
+    "minor" | "feature")
+      ((++minor)); patch=0; pre="";;
+    "patch" | "bug")
+      ((++patch)); pre="";;
+    "alpha")
+      if [[ -z "$preversion" ]]; then
+          preversion=0
+      else
+        if [[ "$pre" != "-alpha" ]]; then
+          preversion=1
+        else
+          ((++preversion))
+        fi
+      fi
+      pre="-alpha$presep$preversion";;
+    "beta")
+      if [[ -z "$preversion" ]]; then
         preversion=0
       else
-        if [[ "$pre" != "-alpha" ]];
-          then
+        if [[ "$pre" != "-beta" ]]; then
           preversion=1
-          else ((++preversion))
+        else
+          ((++preversion))
         fi
-    fi
-    pre="-alpha$presep$preversion";;
-  "beta")
-    if [[ -z "$preversion" ]];
-      then
+      fi
+      pre="-beta$presep$preversion";;
+    "rc")
+      if [[ -z "$preversion" ]]; then
         preversion=0
       else
-        if [[ "$pre" != "-beta" ]];
-          then
+        if [[ "$pre" != "-rc" ]]; then
           preversion=1
-          else ((++preversion))
+        else
+          ((++preversion))
         fi
-    fi
-    pre="-beta$presep$preversion";;
-  "rc")
-    if [[ -z "$preversion" ]];
-      then
-        preversion=0
-      else
-        if [[ "$pre" != "-rc" ]];
-          then
-          preversion=1
-          else ((++preversion))
-        fi
-    fi
-    pre="-rc$presep$preversion";;
+      fi
+      pre="-rc$presep$preversion";;
   esac
 
   next_version="${major}.${minor}.${patch}${pre}"
