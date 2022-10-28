@@ -26,7 +26,6 @@ main() {
   major=0; minor=0; patch=0; pre=""; preversion=0
 
   # break down the version number into it's components
-  # regex="^([0-9]+).([0-9]+).([0-9]+)((-[a-z]+)([0-9]+))?$"
   regex="^([0-9]+).([0-9]+).([0-9]+)((-[a-z]+)(\.)?([0-9]+))?$"
   if [[ $prev_version =~ $regex ]]; then
     major="${BASH_REMATCH[1]}"
@@ -60,7 +59,6 @@ main() {
         fi
     fi
     pre="-alpha$presep$preversion";;
-    # pre="-alpha$preversion";;
   "beta")
     if [[ -z "$preversion" ]];
       then
@@ -73,7 +71,6 @@ main() {
         fi
     fi
     pre="-beta$presep$preversion";;
-    # pre="-beta$preversion";;
   "rc")
     if [[ -z "$preversion" ]];
       then
@@ -86,7 +83,6 @@ main() {
         fi
     fi
     pre="-rc$presep$preversion";;
-    # pre="-rc$preversion";;
   esac
 
   next_version="${major}.${minor}.${patch}${pre}"
