@@ -12,7 +12,7 @@ This is a GitHub action to bump a given semantic version, depending on a given v
 
 **Required** The versions fragment you want to increment.
 
-Possible options are **[ major | feature | bug | alpha | beta | rc ]**
+Possible options are **[ major | minor | patch | alpha | beta | rc ]**
 
 ## Outputs
 
@@ -24,14 +24,14 @@ The incremented version.
 
     - name: Bump release version
       id: bump_version
-      uses: christian-draeger/increment-semantic-version@1.0.2
+      uses: robertpeteuil/increment-version-action@master
       with:
         current-version: '2.11.7-alpha3'
-        version-fragment: 'feature'
+        version-fragment: 'minor'
     - name: Do something with your bumped release version
       run: echo ${{ steps.bump_version.outputs.next-version }}
       # will print 2.12.0
-      
+
 ## input / output Examples
 
 | version-fragment | current-version |   | output        |
@@ -49,5 +49,6 @@ The incremented version.
 | rc               | 2.11.7          |   | 2.11.7-rc1    |
 | rc               | 2.11.7-alpha3   |   | 2.11.7-rc1    |
 
-# License
+## License
+
 The scripts and documentation in this project are released under the [MIT License](LICENSE)
