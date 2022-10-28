@@ -17,8 +17,7 @@ main() {
     echo "could not read previous version"; exit 1
   fi
 
-  # possible_release_types="major feature bug alpha beta rc"
-  possible_release_types="major minor patch alpha beta rc"
+  possible_release_types="major minor feature patch bug alpha beta rc"
 
   if [[ ! ${possible_release_types[*]} =~ ${release_type} ]]; then
     echo "valid argument: [ ${possible_release_types[*]} ]"; exit 1
@@ -27,13 +26,15 @@ main() {
   major=0; minor=0; patch=0; pre=""; preversion=0
 
   # break down the version number into it's components
-  regex="^([0-9]+).([0-9]+).([0-9]+)((-[a-z]+)([0-9]+))?$"
+  # regex="^([0-9]+).([0-9]+).([0-9]+)((-[a-z]+)([0-9]+))?$"
+  regex="^([0-9]+).([0-9]+).([0-9]+)((-[a-z]+)(\.)?([0-9]+))?$"
   if [[ $prev_version =~ $regex ]]; then
     major="${BASH_REMATCH[1]}"
     minor="${BASH_REMATCH[2]}"
     patch="${BASH_REMATCH[3]}"
     pre="${BASH_REMATCH[5]}"
-    preversion="${BASH_REMATCH[6]}"
+    presep="${BASH_REMATCH[6]}"
+    preversion="${BASH_REMATCH[7]}"
   else
     echo "previous version '$prev_version' is not a semantic version"
     exit 1
@@ -43,9 +44,9 @@ main() {
   case "$release_type" in
   "major")
     ((++major)); minor=0; patch=0; pre="";;
-  "minor")
+  "minor" | "feature")
     ((++minor)); patch=0; pre="";;
-  "patch")
+  "patch" | "bug")
     ((++patch)); pre="";;
   "alpha")
     if [[ -z "$preversion" ]];
@@ -58,7 +59,8 @@ main() {
           else ((++preversion))
         fi
     fi
-    pre="-alpha$preversion";;
+    pre="-alpha$presep$preversion";;
+    # pre="-alpha$preversion";;
   "beta")
     if [[ -z "$preversion" ]];
       then
@@ -70,7 +72,8 @@ main() {
           else ((++preversion))
         fi
     fi
-    pre="-beta$preversion";;
+    pre="-beta$presep$preversion";
+    # pre="-beta$preversion";;
   "rc")
     if [[ -z "$preversion" ]];
       then
@@ -82,7 +85,8 @@ main() {
           else ((++preversion))
         fi
     fi
-    pre="-rc$preversion";;
+    pre="-rc$presep$preversion";;
+    # pre="-rc$preversion";;
   esac
 
   next_version="${major}.${minor}.${patch}${pre}"
