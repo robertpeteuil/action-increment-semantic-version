@@ -87,7 +87,13 @@ main() {
   next_version="${major}.${minor}.${patch}${pre}"
   echo "create $release_type-release version: $prev_version -> $next_version"
 
-  echo ::set-output name=next-version::"$next_version"
+  # old format
+  # echo ::set-output name=next-version::"$next_version"
+
+  # new format
+  #   https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+  #   echo "{name}={value}" >> $GITHUB_OUTPUT
+  echo "{next-version}={next_version}" >> $GITHUB_OUTPUT
 }
 
 main "$1" "$2"
