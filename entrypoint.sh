@@ -49,7 +49,7 @@ main() {
       ((++patch)); pre="";;
     "alpha")
       if [[ -z "$preversion" ]]; then
-          preversion=0
+        preversion=0
       else
         if [[ "$pre" != "-alpha" ]]; then
           preversion=1
