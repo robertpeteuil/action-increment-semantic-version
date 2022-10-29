@@ -12,7 +12,16 @@ This is a GitHub action to bump a given semantic version, depending on a given v
 
 **Required** The versions fragment you want to increment.
 
-Possible options are **[ major | (feature | minor) | (bug | patch) | alpha | beta | rc ]**
+Possible options:
+
+- `major` - increment SemVer major release; A in A.x.x
+- `feature` or `minor` - increment SemVer minor release; B in x.B.x
+- `bug` or `patch` - increment SemVer patch release; C in x.x.C
+- `alpha` - increment count for existing alpha release, or convert standard release to alpha
+  - cannot increment `beta` or `rc` pre-releases to `alpha`
+- `beta` - increment count for existing beta release, or convert alpha or standard release to beta
+  - cannot increment `rc` pre-releases to `alpha`
+- `rc` - increment count for existing rc release, or convert alpha, beta or standard release to rc
 
 ## Outputs
 
@@ -34,7 +43,15 @@ The incremented version.
       # will print 2.12.0
 ```
 
+## Creating pre-release versions
+
+- create a pre-release version from a standard release by calling action twice
+  - first to set major/minor/patch values
+  - second to set pre-release
+
 ## input / output Examples
+
+> to update
 
 | version-fragment | current-version |   | output        |
 | ---------------- | --------------- | - | ------------- |
