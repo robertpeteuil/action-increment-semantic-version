@@ -54,7 +54,7 @@ main() {
         # is it being promoted?
         if [[ "$pre" != "-alpha" ]]; then
           preversion=1
-          presep="."   # SPEC
+          presep="."
         # is it incrementing a pre without a count
         elif [[ -z "$preversion" ]]; then
           preversion=2
@@ -74,10 +74,10 @@ main() {
         # is it being promoted from no pre?
         if [[ "$pre" == "" ]]; then
           preversion=1
-          presep="."  # SPEC
+          presep="."
         # promotion from alpha
         elif [[ "$pre" != "-beta" ]]; then
-          # SPEC: if pre-release lacks a count, add standard separator
+          # if pre-release lacks a count, add standard separator
           if [[ "$preversion" == "" ]]; then
             presep="."
           fi
@@ -99,10 +99,10 @@ main() {
       # is it being promoted from no pre?
       if [[ "$pre" == "" ]]; then
         preversion=1
-        presep="."    # SPEC
+        presep="."
       # promotion from alpha, beta
       elif [[ "$pre" != "-rc" ]]; then
-        # SPEC: if pre-release lacks a count, add standard separator
+        # if pre-release lacks a count, add standard separator
         if [[ "$preversion" == "" ]]; then
           presep="."
         fi
