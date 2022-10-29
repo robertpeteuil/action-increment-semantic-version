@@ -94,16 +94,6 @@ main() {
       else
         incerror="cannot increment $pre to -beta"
       fi
-      # if [[ -z "$preversion" ]]; then
-      #   preversion=0
-      # else
-      #   if [[ "$pre" != "-beta" ]]; then
-      #     preversion=1
-      #   else
-      #     ((++preversion))
-      #   fi
-      # fi
-      # preout="-beta$presep$preversion"
       ;;
     "rc")
       # is it being promoted from no pre?
@@ -126,17 +116,6 @@ main() {
         ((++preversion))
       fi
       preout="-rc$presep$preversion"
-
-      # if [[ -z "$preversion" ]]; then
-      #   preversion=0
-      # else
-      #   if [[ "$pre" != "-rc" ]]; then
-      #     preversion=1
-      #   else
-      #     ((++preversion))
-      #   fi
-      # fi
-      # preout="-rc$presep$preversion"
       ;;
   esac
 
